@@ -15,7 +15,7 @@ function loader(element) {
     if (element.textContent === '....') {
       element.textContent = '';
     }
-  }, 100)
+  }, 300)
 }
 
 function typeText(element, text) {
@@ -23,7 +23,7 @@ function typeText(element, text) {
 
   let interval = setInterval(() => {
     if (index < text.length){
-      element.innerHTML += text.chartAt(index);
+      element.innerHTML += text.charAt(index);
       index++;
     } else {
       clearInterval(interval);
@@ -76,6 +76,33 @@ const handleSubmit = async (e) => {
   const messageDiv = document.getElementById(uniqueId);
 
   loader(messageDiv);
+
+
+  const response = await fetch('http://localhost:5173/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      prompt: data.get('prompt')
+    })
+  })
+
+  clearInterval(loadInterval);
+  messageDiv.innerHTML = " "
+  
+  if(response.ok) {
+    const data = await response.json();
+    const parseData = data.bot.trim();
+    console.log(parseData)
+    typeText(messageDiv, parseData);
+  } else {
+    const err = await response.text();
+
+    messageDiv.innerHTML = "Iets ging mis";
+    console.log(err);
+    alert(err);
+  }
 }
 
 form.addEventListener('submit', handleSubmit);
