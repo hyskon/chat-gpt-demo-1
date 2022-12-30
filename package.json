@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "openai": "^3.1.0",
+    "openai-cli": "^0.0.1"
+  }
+}
